@@ -5,11 +5,14 @@ import random
 # variable para guardar aciertos
 aciertos = 0
 
-# variable de dificultad
-dificultad = int(input("¿Qué grado de dificultad quieres practicar? (1-4)"))
+# inicializar LimitZero
 
-if 1 > dificultad > 4:
-    print("Grado de dificultad fuera del rango")
+bandera = str(input("Bienvenido a LimitZero, ¿Deseas practicar? (s/n)"))
+
+while bandera != "s" and bandera != "n":
+    print("Entrada inválida, intenta de nuevo")
+    bandera = str(input("Bienvenido a LimitZero, ¿Deseas practicar? (s/n)"))
+
 
 # definir el template de las funciones
 
@@ -35,54 +38,52 @@ def select_trig():
     return trig
 
 
-def generar_funcion_polinomial():
+def generar_coeficientes():
     a = random.randint(-9, 9)
     b = random.randint(-9, 9)
     c = random.randint(-9, 9)
+    return a, b, c
+
+def generar_exponentes():
     m = random.randint(1, 9)
     n = random.randint(1, 9)
+    return m, n
+
+
+def generar_funcion_polinomial():
+    a, b, c = generar_coeficientes()
+    m, n = generar_exponentes()
     fun1 = f"{a}x^{m} + {b}x^{n} + {c}"
     return fun1
 
 
 def generar_funcion_producto():
-    a = random.randint(-9, 9)
-    b = random.randint(-9, 9)
-    c = random.randint(-9, 9)
-    m = random.randint(1, 9)
-    n = random.randint(1, 9)
+    a, b, c = generar_coeficientes()
+    m, n = generar_exponentes()
     fun2 = f"({a}x^{m}) * ({b}x^{n})"
     return fun2
 
 
 def generar_funcion_cociente():
-    a = random.randint(-9, 9)
-    b = random.randint(-9, 9)
-    c = random.randint(-9, 9)
-    m = random.randint(1, 9)
-    n = random.randint(1, 9)
+    a, b, c = generar_coeficientes()
+    m, n = generar_exponentes()
     fun3 = f"({a}x^{m}) / ({b}x^{n})"
     return fun3
 
 
 def generar_funcion_trig1():
-    a = random.randint(-9, 9)
-    c = random.randint(-9, 9)
+    a, b, c = generar_coeficientes()
     trig = select_trig()
     fun4 = f"{a}{trig}(x) + {c}"
     return fun4
 
 
 def generar_funcion_trig2():
-    a = random.randint(-9, 9)
-    b = random.randint(-9, 9)
-    c = random.randint(-9, 9)
-    m = random.randint(1, 9)
-    n = random.randint(1, 9)
+    a, b, c = generar_coeficientes()
+    m, n = generar_exponentes()
     trig = select_trig()
     fun5 = f"{a}{trig}(x^{m} + {b}x^{n}) + {c}"
     return fun5
-
 
 
 def calcular_aciertos(num_aciertos):
@@ -106,7 +107,20 @@ def seleccionar_pool(nivel_dificultad):
     return fun1, fun2   
 
 
-fun1, fun2 = seleccionar_pool(dificultad)
+# codigo principal
 
-print(fun1)
-print(fun2)
+while bandera == "s":
+    # variable de dificultad
+    dificultad = int(input("¿Qué grado de dificultad quieres practicar? (1-3)"))
+
+    while dificultad < 1 or dificultad > 3:
+        print("Grado de dificultad fuera del rango")
+        dificultad = int(input("¿Qué grado de dificultad quieres practicar? (1-3)"))
+
+    fun1, fun2 = seleccionar_pool(dificultad)
+    print(f"{fun1}\n{fun2}")
+
+    bandera = str(input("¿Quieres seguir practicando? (s/n)"))
+    while bandera != "s" and bandera != "n":
+        print("Entrada inválida, intenta de nuevo")
+        bandera = str(input("¿Quieres seguir practicando? (s/n)"))
