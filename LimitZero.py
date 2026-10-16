@@ -17,24 +17,13 @@ while bandera != "s" and bandera != "n":
 # definir el template de las funciones
 
 def select_trig():
-
-    trig_num = random.randint(1, 6)
     """
-    (uso de estrucutras de decisión, uso de funciones)
+    (uso de funciones, uso de listas)
     devuelve: funcion trigonometrica
     """
-    if trig_num == 1:
-        trig = "sin"
-    elif trig_num == 2:
-        trig = "cos"
-    elif trig_num == 3:
-        trig = "tan"
-    elif trig_num == 4:
-        trig = "cot"
-    elif trig_num == 5:
-        trig = "sec"
-    elif trig_num == 6:
-        trig = "csc"
+    opciones_trig = ["sin", "cos", "tan", "cot", "sec", "csc"]
+    trig_num = random.randint(0, 5)
+    trig = opciones_trig[trig_num]
     return trig
 
 
@@ -93,23 +82,33 @@ def calcular_aciertos(num_aciertos):
 def seleccionar_pool(nivel_dificultad):
     """
     (uso de estrucutras de decisión, uso de funciones)
-    devuelve: funcion trigonometrica
+    devuelve: funcion a utilizar
     """
     if nivel_dificultad == 1:
         fun1 = generar_funcion_polinomial()
-        fun2 = generar_funcion_polinomial()
     elif nivel_dificultad == 2:
         fun1 = generar_funcion_cociente()
-        fun2 = generar_funcion_producto()
     elif nivel_dificultad == 3:
         fun1 = generar_funcion_trig1()
-        fun2 = generar_funcion_trig2()
-    return fun1, fun2   
+    return fun1
+
+
+def lista_ejercicios(lista, cantidad, dificultad):
+    """
+    (uso de estrucutras de repetición, uso de listas)
+    devuelve: lista con las funciones seleccionadas
+    """
+    i = 0
+    while i < cantidad:
+        lista.append(seleccionar_pool(dificultad))
+        i = i + 1
+    return lista
 
 
 # codigo principal
 
 while bandera == "s":
+    funciones = []
     # variable de dificultad
     dificultad = int(input("¿Qué grado de dificultad quieres practicar? (1-3)"))
 
@@ -117,8 +116,9 @@ while bandera == "s":
         print("Grado de dificultad fuera del rango")
         dificultad = int(input("¿Qué grado de dificultad quieres practicar? (1-3)"))
 
-    fun1, fun2 = seleccionar_pool(dificultad)
-    print(f"{fun1}\n{fun2}")
+    qty = int(input("¿Cuántos ejercicios quieres practicar?"))
+
+    print(lista_ejercicios(funciones, qty, dificultad))
 
     bandera = str(input("¿Quieres seguir practicando? (s/n)"))
     while bandera != "s" and bandera != "n":
