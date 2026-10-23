@@ -75,10 +75,6 @@ def generar_funcion_trig2():
     return fun5
 
 
-def calcular_aciertos(num_aciertos):
-    return num_aciertos / 5
-
-
 def seleccionar_pool(nivel_dificultad):
     """
     (uso de estrucutras de decisión, uso de funciones)
@@ -105,6 +101,32 @@ def lista_ejercicios(lista, cantidad, dificultad):
     return lista
 
 
+def crea_matriz(num_ejercicios):
+    matriz = []
+    for i in range(num_ejercicios):
+        matriz.append([])
+    return matriz
+
+
+def guarda_resultados(num_ejercicios, funciones):
+    mat = crea_matriz(num_ejercicios)
+    i = 0
+    for row in range(len(mat)):
+        mat[row].append(funciones[i])
+        mat[row].append(input("¿derivada correcta?"))
+        mat[row].append(input("¿respuesta del usuario?"))
+        i = i + 1
+    return mat
+
+
+def compara_aciertos(matriz):
+    aciertos = 0
+    for i in matriz:
+        if i[1] == i[2]:
+            aciertos = aciertos + 1
+    return ("Tuviste:",aciertos, "aciertos")
+
+
 # codigo principal
 
 while bandera == "s":
@@ -117,8 +139,10 @@ while bandera == "s":
         dificultad = int(input("¿Qué grado de dificultad quieres practicar? (1-3)"))
 
     qty = int(input("¿Cuántos ejercicios quieres practicar?"))
+    lista_funcs = lista_ejercicios(funciones, qty, dificultad)
+    tabla_resultados = guarda_resultados(qty, lista_funcs)
 
-    print(lista_ejercicios(funciones, qty, dificultad))
+    print(compara_aciertos(tabla_resultados))
 
     bandera = str(input("¿Quieres seguir practicando? (s/n)"))
     while bandera != "s" and bandera != "n":
