@@ -1,9 +1,11 @@
 import math
 import random
+import sympy as sp
+x = sp.symbols('x')
 
-
-# variable para guardar aciertos
+# declarar variables
 aciertos = 0
+lista_caracteres_invalidos = ["^"]
 
 # inicializar LimitZero
 
@@ -31,6 +33,10 @@ def generar_coeficientes():
     a = random.randint(-9, 9)
     b = random.randint(-9, 9)
     c = random.randint(-9, 9)
+    while a == 0 or b == 0 or c == 0:
+        a = random.randint(-9, 9)
+        b = random.randint(-9, 9)
+        c = random.randint(-9, 9)
     return a, b, c
 
 def generar_exponentes():
@@ -38,32 +44,41 @@ def generar_exponentes():
     n = random.randint(1, 9)
     return m, n
 
+def limpiar_funcion(funcion):
+    if "+ -" in funcion:
+        funcion = funcion.replace("+ -", "-")
+    if "- +" in funcion:
+        funcion = funcion.replace("- +", "-")
+    if "- -" in funcion:
+        funcion = funcion.replace("- -", "+")
+    return funcion
+
 
 def generar_funcion_polinomial():
     a, b, c = generar_coeficientes()
     m, n = generar_exponentes()
-    fun1 = f"{a}x^{m} + {b}x^{n} + {c}"
+    fun1 = f"{a}*x**{m} + {b}*x**{n} + {c}"
     return fun1
 
 
 def generar_funcion_producto():
     a, b, c = generar_coeficientes()
     m, n = generar_exponentes()
-    fun2 = f"({a}x^{m}) * ({b}x^{n})"
+    fun2 = f"({a}*x**{m}) * ({b}*x**{n})"
     return fun2
 
 
 def generar_funcion_cociente():
     a, b, c = generar_coeficientes()
     m, n = generar_exponentes()
-    fun3 = f"({a}x^{m}) / ({b}x^{n})"
+    fun3 = f"({a}*x**{m}) / ({b}*x**{n})"
     return fun3
 
 
 def generar_funcion_trig1():
     a, b, c = generar_coeficientes()
     trig = select_trig()
-    fun4 = f"{a}{trig}(x) + {c}"
+    fun4 = f"{a}*{trig}(x) + {c}"
     return fun4
 
 
@@ -71,7 +86,7 @@ def generar_funcion_trig2():
     a, b, c = generar_coeficientes()
     m, n = generar_exponentes()
     trig = select_trig()
-    fun5 = f"{a}{trig}(x^{m} + {b}x^{n}) + {c}"
+    fun5 = f"{a}*{trig}(x**{m} + {b}*x**{n}) + {c}"
     return fun5
 
 
@@ -91,7 +106,7 @@ def seleccionar_pool(nivel_dificultad):
 
 def lista_ejercicios(lista, cantidad, dificultad):
     """
-    (uso de estrucutras de repetición, uso de listas)
+    (uso de estrucutras de repeticion, uso de listas)
     devuelve: lista con las funciones seleccionadas
     """
     i = 0
@@ -108,13 +123,21 @@ def crea_matriz(num_ejercicios):
     return matriz
 
 
+def limpiar_entrada_usuario(entrada):
+    entrada = entrada.lower()
+    entrada = entrada.replace("^", "**")
+    return entrada
+    
+
 def guarda_resultados(num_ejercicios, funciones):
     mat = crea_matriz(num_ejercicios)
     i = 0
     for row in range(len(mat)):
         mat[row].append(funciones[i])
-        mat[row].append(input("¿derivada correcta?"))
-        mat[row].append(input("¿respuesta del usuario?"))
+        print(funciones[i])
+        mat[row].append(sp.diff(funciones[i], x)) 
+        res = limpiar_entrada_usuario(input("¿respuesta?"))
+        mat[row].append(sp.sympify((res)))
         i = i + 1
     return mat
 
@@ -122,9 +145,15 @@ def guarda_resultados(num_ejercicios, funciones):
 def compara_aciertos(matriz):
     aciertos = 0
     for i in matriz:
-        if i[1] == i[2]:
+        if sp.simplify(sp.sympify(i[2]) - i[1]) == 0:
             aciertos = aciertos + 1
     return ("Tuviste:",aciertos, "aciertos")
+
+
+# función para ayudar a debugear la matriz
+def print_matriz(matriz):
+    for fila in matriz:
+        print(fila)
 
 
 # codigo principal
